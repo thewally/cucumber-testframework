@@ -14,11 +14,11 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by arjen on 23-11-16.
  */
-public class CompressedGenericFile extends GenericFile {
-    private static final Logger LOG = LoggerFactory.getLogger(CompressedGenericFile.class);
+public class CompressedFile extends GenericFile {
+    private static final Logger LOG = LoggerFactory.getLogger(CompressedFile.class);
     private static final int ONE_K = 1024;
 
-    public CompressedGenericFile(String path, String filename) {
+    public CompressedFile(String path, String filename) {
         super(path, filename);
         String extension = FilenameUtils.getExtension(filename);
         if(!extension.equals("zip")){
