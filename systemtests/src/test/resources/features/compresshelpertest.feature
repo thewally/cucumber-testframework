@@ -3,3 +3,8 @@ Feature: As Tester I want to compress and decompress a file
     Given create file with directory dir and filename file.txt
     When compress file
     Then compressed file is available
+
+  Scenario: Decompress a file and check availability
+    Given select created compressed file with path dir and filename file.zip
+    When decompress file
+    Then decompressed file file.txt is available in directory dir

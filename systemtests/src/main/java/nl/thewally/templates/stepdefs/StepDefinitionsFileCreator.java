@@ -19,15 +19,15 @@ import java.nio.file.Path;
  */
 public class StepDefinitionsFileCreator {
     private static final Logger LOG = LoggerFactory.getLogger(StepDefinitionsFileCreator.class);
-    private Path relativepath;
+    private Path relativePath;
 
     GenericFile newFile;
     CompressedFile compressedFile;
 
     @Given("^create file with directory (.*) and filename (.*)$")
     public void createFileWithDirectoryAndFilename(String directory, String filename) throws Throwable {
-        relativepath = Files.createTempDirectory(new File(System.getProperty("user.home")).toPath(), directory);
-        newFile = new GenericFile(relativepath.toString(), filename);
+        relativePath = Files.createTempDirectory(new File(System.getProperty("user.home")).toPath(), directory);
+        newFile = new GenericFile(relativePath.toString(), filename);
         newFile.createFile();
 
         if(newFile.isAvailable()) {
@@ -53,6 +53,38 @@ public class StepDefinitionsFileCreator {
         }
         else {
             Assert.fail("Compressed file "+compressedFile.getFullFilePath()+" is not created.");
+        }
+    }
+
+    @Given("^select created compressed file with path (.*) and filename (.*)$")
+    public void selectCreatedCompressedFileWithPathAndFilenameFile(String directory, String filename) throws Throwable {
+        relativePath = Files.createTempDirectory(new File(System.getProperty("user.home")).toPath(), directory);
+        compressedFile = new CompressedFile(relativePath.toString(), filename);
+
+        if(compressedFile.isAvailable()) {
+            LOG.info("File {} is created", compressedFile.getFullFilePath());
+            Assert.assertTrue(true);
+        }
+        else {
+            Assert.fail("File "+compressedFile.getFullFilePath()+" is not created.");
+        }
+    }
+
+    @When("^decompress file$")
+    public void decompressFile() throws Throwable {
+        compressedFile.decompress();
+    }
+
+    @Then("^decompressed file (.*) is available in directory (.*)$")
+    public void decompressedFileIsAvailableInDirectory(String filename, String directory) throws Throwable {
+        relativePath = Files.createTempDirectory(new File(System.getProperty("user.home")).toPath(), directory);
+        newFile = new GenericFile(relativePath.toString(), filename);
+        if(newFile.isAvailable()) {
+            LOG.info("File {} is created", newFile.getFullFilePath());
+            Assert.assertTrue(true);
+        }
+        else {
+            Assert.fail("File "+newFile.getFullFilePath()+" is not created.");
         }
     }
 }
