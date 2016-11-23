@@ -22,7 +22,7 @@ public class GenericFile {
         this.fullfilepath = new File(path + filename);
     }
 
-    public void createFile(String extension) {
+    public void createFile() {
 
     }
 
@@ -42,7 +42,10 @@ public class GenericFile {
         return fullfilepath.toURI();
     }
 
-    public void compress(){
+    public File compress(){
+        //TODO compress file
+        //TODO return fullfilepath of new compressed file
+        return fullfilepath;
     }
 
     public boolean isAvailable() {
