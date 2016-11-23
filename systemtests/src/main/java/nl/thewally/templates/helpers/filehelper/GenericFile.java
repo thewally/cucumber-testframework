@@ -22,6 +22,10 @@ public class GenericFile {
         this.fullfilepath = new File(path + filename);
     }
 
+    public void createFile(String extension) {
+
+    }
+
     public String getFilename() {
         return filename;
     }
