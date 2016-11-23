@@ -3,10 +3,10 @@ package nl.thewally.templates.helpers.filehelper;
 /**
  * Created by arjen on 23-11-16.
  */
-public class File {
+public class GenericFile {
     private String filename, path;
 
-    public File(String path, String filename) {
+    public GenericFile(String path, String filename) {
         this.path = path;
         this.filename = filename;
     }

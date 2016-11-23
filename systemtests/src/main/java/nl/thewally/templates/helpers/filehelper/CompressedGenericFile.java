@@ -3,8 +3,8 @@ package nl.thewally.templates.helpers.filehelper;
 /**
  * Created by arjen on 23-11-16.
  */
-public class CompressedFile extends File {
-    public CompressedFile(String path, String filename) {
+public class CompressedGenericFile extends GenericFile {
+    public CompressedGenericFile(String path, String filename) {
         super(path, filename);
     }
 
