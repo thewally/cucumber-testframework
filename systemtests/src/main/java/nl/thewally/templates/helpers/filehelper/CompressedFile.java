@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,7 +19,7 @@ public class CompressedFile extends GenericFile {
     private static final Logger LOG = LoggerFactory.getLogger(CompressedFile.class);
     private static final int ONE_K = 1024;
 
-    public CompressedFile(String path, String filename) {
+    public CompressedFile(Path path, String filename) {
         super(path, filename);
         String extension = FilenameUtils.getExtension(filename);
         if(!extension.equals("zip")){
@@ -30,8 +31,8 @@ public class CompressedFile extends GenericFile {
         decompress(getPath());
     }
 
-    public void decompress(String newPath) {
-        File newLocation = new File(newPath);
+    public void decompress(Path newPath) {
+        File newLocation = new File(newPath.toString());
         LOG.debug("Unzip {} to folder {}", getFullFilePath().getAbsolutePath(), newLocation.getAbsolutePath());
         try {
             //create output directory is not exists

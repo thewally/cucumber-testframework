@@ -28,7 +28,7 @@ public class StepDefinitionsCompress {
     @Given("^create file with directory (.*) and filename (.*)$")
     public void createFileWithDirectoryAndFilename(String directory, String filename) throws Throwable {
         relativePath = Files.createDirectory(new File(System.getProperty("user.home")+File.separator+directory).toPath());
-        newFile = new GenericFile(relativePath.toString(), filename);
+        newFile = new GenericFile(relativePath, filename);
         newFile.createFile();
 
         if(newFile.isAvailable()) {
@@ -43,7 +43,7 @@ public class StepDefinitionsCompress {
     @When("^compress file$")
     public void compressFile() throws Throwable {
         File compressed = newFile.compress();
-        compressedFile = new CompressedFile(compressed.getParent(), compressed.getName());
+        compressedFile = new CompressedFile(compressed.toPath().getParent(), compressed.getName());
     }
 
     @Then("^compressed file is available$")
@@ -60,7 +60,7 @@ public class StepDefinitionsCompress {
     @Given("^select created compressed file with path (.*) and filename (.*)$")
     public void selectCreatedCompressedFileWithPathAndFilenameFile(String directory, String filename) throws Throwable {
         relativePath = new File(System.getProperty("user.home")+File.separator+directory).toPath();
-        compressedFile = new CompressedFile(relativePath.toString(), filename);
+        compressedFile = new CompressedFile(relativePath, filename);
 
         if(compressedFile.isAvailable()) {
             LOG.info("File {} is created", compressedFile.getFullFilePath());
@@ -74,13 +74,13 @@ public class StepDefinitionsCompress {
     @When("^decompress file to (.*)$")
     public void decompressFileTo(String directory) throws Throwable {
         relativePath = Files.createDirectory(new File(System.getProperty("user.home")+File.separator+directory).toPath());
-        compressedFile.decompress(relativePath.toString());
+        compressedFile.decompress(relativePath);
     }
 
     @Then("^decompressed file (.*) is available in directory (.*)$")
     public void decompressedFileIsAvailableInDirectory(String filename, String directory) throws Throwable {
         relativePath = new File(System.getProperty("user.home")+File.separator+directory).toPath();
-        newFile = new GenericFile(relativePath.toString(), filename);
+        newFile = new GenericFile(relativePath, filename);
         if(newFile.isAvailable()) {
             LOG.info("File {} is created", newFile.getFullFilePath());
             Assert.assertTrue(true);

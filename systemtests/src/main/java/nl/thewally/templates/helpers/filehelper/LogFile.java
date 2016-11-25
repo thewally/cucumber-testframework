@@ -1,12 +1,13 @@
 package nl.thewally.templates.helpers.filehelper;
 
+import java.nio.file.Path;
 import java.util.Date;
 
 /**
  * Created by arjen on 24-11-16.
  */
 public class LogFile extends GenericFile {
-    public LogFile(String path, String filename) {
+    public LogFile(Path path, String filename) {
         super(path, filename);
     }
 

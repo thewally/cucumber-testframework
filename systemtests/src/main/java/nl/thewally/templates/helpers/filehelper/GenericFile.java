@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -13,14 +14,13 @@ import java.util.zip.ZipOutputStream;
  * Created by arjen on 23-11-16.
  */
 public class GenericFile {
-    //TODO: Convert path variable to Path class (import java.nio.file.Path)
-
     private static final Logger LOG = LoggerFactory.getLogger(GenericFile.class);
 
-    private String filename, path;
+    private String filename;
+    private Path path;
     private File fullfilepath;
 
-    public GenericFile(String path, String filename) {
+    public GenericFile(Path path, String filename) {
         this.path = path;
         this.filename = filename;
         this.fullfilepath = new File(path + File.separator + filename);
@@ -54,7 +54,7 @@ public class GenericFile {
         return filename;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 
@@ -84,9 +84,9 @@ public class GenericFile {
         return compress(path);
     }
 
-    public File compress(String zipPath) {
+    public File compress(Path compressPath) {
         byte[] buffer = new byte[1024];
-        File fullPathToZipFile = new File(zipPath+File.separator+FilenameUtils.removeExtension(filename) + ".zip");
+        File fullPathToZipFile = new File(compressPath.toString()+File.separator+FilenameUtils.removeExtension(filename) + ".zip");
         try{
             FileOutputStream fos = new FileOutputStream(fullPathToZipFile);
             ZipOutputStream zos = new ZipOutputStream(fos);
