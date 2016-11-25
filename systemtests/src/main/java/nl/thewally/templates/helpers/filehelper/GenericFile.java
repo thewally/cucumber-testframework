@@ -18,18 +18,18 @@ public class GenericFile {
 
     private String filename;
     private Path path;
-    private File fullfilepath;
+    private File fullFilePath;
 
     public GenericFile(Path path, String filename) {
         this.path = path;
         this.filename = filename;
-        this.fullfilepath = new File(path + File.separator + filename);
+        this.fullFilePath = new File(path + File.separator + filename);
     }
 
     public void createFile() {
         try {
-            if (!fullfilepath.exists()) {
-                fullfilepath.createNewFile();
+            if (!fullFilePath.exists()) {
+                fullFilePath.createNewFile();
             }
         } catch (IOException ex) {
             LOG.error("Create file failed {}", ex);
@@ -38,15 +38,15 @@ public class GenericFile {
 
     public void setValueOnNewRowInFile(String content) {
         try {
-            if (!fullfilepath.exists()) {
+            if (!fullFilePath.exists()) {
                 createFile();
             }
-            FileWriter fw = new FileWriter(fullfilepath.getAbsoluteFile());
+            FileWriter fw = new FileWriter(fullFilePath.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(content);
             bw.close();
         } catch (IOException ex) {
-            LOG.error("Cannot set value {} for file {}:/n{}", content, fullfilepath.getAbsolutePath(), ex);
+            LOG.error("Cannot set value {} for file {}:/n{}", content, fullFilePath.getAbsolutePath(), ex);
         }
     }
 
@@ -59,11 +59,7 @@ public class GenericFile {
     }
 
     public File getFullFilePath() {
-        return fullfilepath;
-    }
-
-    public URI getFileUri() {
-        return fullfilepath.toURI();
+        return fullFilePath;
     }
 
     public String getAllContent() {
@@ -92,7 +88,7 @@ public class GenericFile {
             ZipOutputStream zos = new ZipOutputStream(fos);
             ZipEntry ze = new ZipEntry(filename);
             zos.putNextEntry(ze);
-            FileInputStream in = new FileInputStream(fullfilepath);
+            FileInputStream in = new FileInputStream(fullFilePath);
 
             int len;
             while ((len = in.read(buffer)) > 0) {
@@ -111,11 +107,11 @@ public class GenericFile {
     }
 
     public boolean isAvailable() {
-        if (fullfilepath.exists()) {
-            LOG.debug("File exists : {}", fullfilepath.getAbsolutePath());
+        if (fullFilePath.exists()) {
+            LOG.debug("File exists : {}", fullFilePath.getAbsolutePath());
             return true;
         } else {
-            LOG.debug("File not found! : {}", fullfilepath.getAbsolutePath());
+            LOG.debug("File not found! : {}", fullFilePath.getAbsolutePath());
         }
         return false;
     }
