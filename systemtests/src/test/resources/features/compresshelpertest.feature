@@ -6,5 +6,5 @@ Feature: As Tester I want to compress and decompress a file
 
   Scenario: Decompress a file and check availability
     Given select created compressed file with path dir and filename file.zip
-    When decompress file
-    Then decompressed file file.txt is available in directory dir
+    When decompress file to dir/tmp
+    Then decompressed file file.txt is available in directory dir/tmp

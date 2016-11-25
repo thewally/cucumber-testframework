@@ -1,10 +1,13 @@
 package nl.thewally.templates.helpers.filehelper;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by arjen on 23-11-16.
@@ -19,7 +22,7 @@ public class GenericFile {
     public GenericFile(String path, String filename) {
         this.path = path;
         this.filename = filename;
-        this.fullfilepath = new File(path + filename);
+        this.fullfilepath = new File(path + File.separator + filename);
     }
 
     public void createFile() {
@@ -77,14 +80,33 @@ public class GenericFile {
     }
 
     public File compress(){
-        File path = new File(getPath());
         return compress(path);
     }
-    public File compress(File path) {
-        //TODO: implement method compress
-        //compress file
-        //return fullfilepath of new compressed file
-        return fullfilepath;
+
+    public File compress(String zipPath) {
+        byte[] buffer = new byte[1024];
+        File fullPathToZipFile = new File(zipPath+File.separator+FilenameUtils.removeExtension(filename) + ".zip");
+        try{
+            FileOutputStream fos = new FileOutputStream(fullPathToZipFile);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            ZipEntry ze = new ZipEntry(filename);
+            zos.putNextEntry(ze);
+            FileInputStream in = new FileInputStream(fullfilepath);
+
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
+            }
+
+            in.close();
+            zos.closeEntry();
+            zos.close();
+
+        } catch (IOException e) {
+            LOG.error("Cannot compress file: {}\n{}", path+filename, e);
+        }
+
+        return fullPathToZipFile;
     }
 
     public boolean isAvailable() {
