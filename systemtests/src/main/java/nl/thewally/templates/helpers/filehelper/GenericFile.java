@@ -62,10 +62,18 @@ public class GenericFile {
         return fullfilepath.toURI();
     }
 
-    public void getAllRowsOfFile() {
+    public String getAllContent() {
+        //TODO: implement method getAllContent
+        return "";
+    }
+
+    public String getSpecificContentByRow(int row) {
+        //TODO: implement method getSpecificContentByRow
+        return "";
     }
 
     public void removeFile(){
+        //TODO: implement method removeFile
     }
 
     public File compress(){
@@ -73,8 +81,9 @@ public class GenericFile {
         return compress(path);
     }
     public File compress(File path) {
-        //TODO compress file
-        //TODO return fullfilepath of new compressed file
+        //TODO: implement method compress
+        //compress file
+        //return fullfilepath of new compressed file
         return fullfilepath;
     }
 
