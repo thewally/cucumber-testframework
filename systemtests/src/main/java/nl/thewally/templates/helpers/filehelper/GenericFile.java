@@ -13,6 +13,7 @@ import java.util.zip.ZipOutputStream;
  * Created by arjen on 23-11-16.
  */
 public class GenericFile {
+    //TODO: Convert path variable to Path class (import java.nio.file.Path)
 
     private static final Logger LOG = LoggerFactory.getLogger(GenericFile.class);
 
