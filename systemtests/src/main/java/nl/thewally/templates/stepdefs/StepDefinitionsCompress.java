@@ -5,6 +5,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import nl.thewally.templates.helpers.directoryhelper.GenericDirectory;
 import nl.thewally.templates.helpers.filehelper.CompressedFile;
 import nl.thewally.templates.helpers.filehelper.GenericFile;
 import org.junit.Assert;
@@ -13,9 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Properties;
 
 /**
@@ -27,32 +26,30 @@ public class StepDefinitionsCompress {
 
     private GenericFile newFile;
     private CompressedFile compressedFile;
+    private String dir;
 
     private final Properties properties = new Properties();
 
-    private String workingDir;
-
-    private String getFilePath(String directory) {
-        String r;
-        if(directory.equals("")) {
-            r = System.getProperty(workingDir);
-        }
-        else {
-            r = System.getProperty(workingDir)+File.separator+directory;
-        }
-        return r;
-    }
+    private GenericDirectory workingDir;
 
     @Before
-    public void setParameters()  throws IOException {
+    public void setParameters() throws IOException {
         properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("test.properties"));
-        workingDir = properties.getProperty("working_dir");
+        dir = properties.getProperty("working_dir");
+        workingDir = new GenericDirectory(new File(System.getProperty(dir)).toPath());
+    }
+
+    @Given("^cleanup working folder (.*)")
+    public void cleanupWorkingFolder(String directory) throws Throwable {
+        Path dir = workingDir.getSubDirectory(directory);
+        GenericDirectory tempDir = new GenericDirectory(dir);
+        tempDir.removeDirectory();
     }
 
     @Given("^create file with directory (.*) and filename (.*)$")
     public void createFileWithDirectoryAndFilename(String directory, String filename) throws Throwable {
-        relativePath = Files.createDirectory(new File(getFilePath(directory)).toPath());
-        newFile = new GenericFile(relativePath, filename);
+        Path path = workingDir.createSubDirectory(directory);
+        newFile = new GenericFile(path, filename);
         newFile.createFile();
 
         if(newFile.isAvailable()) {
@@ -83,8 +80,7 @@ public class StepDefinitionsCompress {
 
     @Given("^select created compressed file with path (.*) and filename (.*)$")
     public void selectCreatedCompressedFileWithPathAndFilenameFile(String directory, String filename) throws Throwable {
-        relativePath = new File(getFilePath(directory)).toPath();
-        compressedFile = new CompressedFile(relativePath, filename);
+        compressedFile = new CompressedFile(workingDir.getSubDirectory(directory), filename);
 
         if(compressedFile.isAvailable()) {
             LOG.info("File {} is created", compressedFile.getFullFilePath());
@@ -97,14 +93,12 @@ public class StepDefinitionsCompress {
 
     @When("^decompress file to (.*)$")
     public void decompressFileTo(String directory) throws Throwable {
-        relativePath = Files.createDirectory(new File(System.getProperty("user.home")+File.separator+directory).toPath());
-        compressedFile.decompress(relativePath);
+        compressedFile.decompress(workingDir.createSubDirectory(directory));
     }
 
     @Then("^decompressed file (.*) is available in directory (.*)$")
     public void decompressedFileIsAvailableInDirectory(String filename, String directory) throws Throwable {
-        relativePath = new File(getFilePath(directory)).toPath();
-        newFile = new GenericFile(relativePath, filename);
+        newFile = new GenericFile(workingDir.getSubDirectory(directory), filename);
         if(newFile.isAvailable()) {
             LOG.info("File {} is created", newFile.getFullFilePath());
             Assert.assertTrue(true);
@@ -113,5 +107,6 @@ public class StepDefinitionsCompress {
             Assert.fail("File "+newFile.getFullFilePath()+" is not created.");
         }
     }
+
 
 }
