@@ -64,4 +64,14 @@ public class GenericDirectory {
             LOG.error("Directory not found:\n{}", e);
         }
     }
+
+    public boolean isAvailable() {
+        if (path.toFile().exists()) {
+            LOG.debug("File exists : {}", path.toFile().getAbsolutePath());
+            return true;
+        } else {
+            LOG.debug("File not found! : {}", path.toFile().getAbsolutePath());
+        }
+        return false;
+    }
 }
