@@ -108,10 +108,10 @@ public class GenericFile {
 
     public boolean isAvailable() {
         if (fullFilePath.exists()) {
-            LOG.debug("File exists : {}", fullFilePath.getAbsolutePath());
+            LOG.info("File exists : {}", fullFilePath.getAbsolutePath());
             return true;
         } else {
-            LOG.debug("File not found! : {}", fullFilePath.getAbsolutePath());
+            LOG.error("File not found! : {}", fullFilePath.getAbsolutePath());
         }
         return false;
     }

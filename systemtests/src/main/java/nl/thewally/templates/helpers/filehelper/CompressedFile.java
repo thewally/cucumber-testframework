@@ -23,7 +23,7 @@ public class CompressedFile extends GenericFile {
         super(path, filename);
         String extension = FilenameUtils.getExtension(filename);
         if(!extension.equals("zip")){
-            LOG.debug("This file with extension {} is not a compressed file", extension);
+            LOG.error("This file with extension {} is not a compressed file", extension);
         }
     }
 
@@ -33,7 +33,7 @@ public class CompressedFile extends GenericFile {
 
     public void decompress(Path newPath) {
         File newLocation = new File(newPath.toString());
-        LOG.debug("Unzip {} to folder {}", getFullFilePath().getAbsolutePath(), newLocation.getAbsolutePath());
+        LOG.info("Unzip {} to folder {}", getFullFilePath().getAbsolutePath(), newLocation.getAbsolutePath());
         try {
             //create output directory is not exists
             if (!newLocation.exists() && !newLocation.mkdir()) {
@@ -49,7 +49,7 @@ public class CompressedFile extends GenericFile {
                 while (ze != null) {
                     String fileName = ze.getName();
                     final File newFile = new File(newLocation, fileName);
-                    LOG.debug("file unzip : {}", newFile.getAbsoluteFile());
+                    LOG.info("file unzip : {}", newFile.getAbsoluteFile());
                     unzipSingleEntry(newFile, zis);
                     lastFileName = newFile.getAbsoluteFile().toString();
                     ze = zis.getNextEntry();
@@ -68,7 +68,7 @@ public class CompressedFile extends GenericFile {
         //create all non exists folders
         //else you will hit FileNotFoundException for compressed folder
         if (!newFile.getParentFile().mkdirs()) {
-            LOG.warn("mkdirs for {} failed", newFile.getParent());
+            LOG.info("mkdirs for {} failed", newFile.getParent());
         }
         try (FileOutputStream fos = new FileOutputStream(newFile)) {
             byte[] buffer = new byte[ONE_K];
