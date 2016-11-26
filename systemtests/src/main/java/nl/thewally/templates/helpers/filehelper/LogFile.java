@@ -1,7 +1,6 @@
 package nl.thewally.templates.helpers.filehelper;
 
 import java.nio.file.Path;
-import java.util.Date;
 
 /**
  * Created by arjen on 24-11-16.

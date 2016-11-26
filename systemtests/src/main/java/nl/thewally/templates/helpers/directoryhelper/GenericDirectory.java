@@ -1,6 +1,5 @@
 package nl.thewally.templates.helpers.directoryhelper;
 
-import nl.thewally.templates.helpers.filehelper.GenericFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
