@@ -40,7 +40,7 @@ public class GenericDirectory {
         return Files.createDirectory(new File(path.toString() + File.separator + directoryName).toPath());
     }
 
-    public void removeDirectory() throws IOException {
+    public void removeDirectory() {
         File folder = path.toFile();
         removeDirectory(folder);
     }
