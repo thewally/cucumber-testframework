@@ -2,8 +2,10 @@
     <SOAP-ENV:Header/>
     <SOAP-ENV:Body>
         <example:VerifyEmail>
+            <#if email??>
             <example:email>${email}</example:email>
-            <example:LicenseKey>${licensekey}</example:LicenseKey>
+            </#if>
+            <example:LicenseKey>${licensekey!}</example:LicenseKey>
         </example:VerifyEmail>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

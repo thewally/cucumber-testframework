@@ -25,7 +25,7 @@ public class StepDefinitionsService {
     public void sendRequest() throws Throwable {
         TemplateHandler request = new TemplateHandler("requests/request.ftl");
         request.setValue("email", "arjen.vanderwal@gmail.com");
-        request.setValue("licensekey", "123");
+//        request.setValue("licensekey", "123"); # Turn on if needed
         client = new SoapServiceClient("http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx");
         client.sendSoapRequest(request.getOutput());
         LOG.debug("Request: \n{}", client.getSoapRequest());
