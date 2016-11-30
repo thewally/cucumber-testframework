@@ -37,16 +37,12 @@ public class SoapServiceClient extends ServiceClient {
         request = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(requestMessage.getBytes(Charset.forName("UTF-8"))));
 
         try {
-            // Create SOAP Connection
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
-
             response = soapConnection.call(request, getEndpoint());
-
             soapConnection.close();
         } catch (Exception e) {
-            System.err.println("Error occurred while sending SOAP Request to Server");
-            e.printStackTrace();
+            LOG.error("Error occurred while sending SOAP Request to Server: \n{}", e);
         }
 
     }
@@ -87,15 +83,12 @@ public class SoapServiceClient extends ServiceClient {
             final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
             final Boolean keepDeclaration = Boolean.valueOf(xml.startsWith("<?xml"));
 
-            //May need this: System.setProperty(DOMImplementationRegistry.PROPERTY,"com.sun.org.apache.xerces.internal.dom.DOMImplementationSourceImpl");
-
-
             final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
             final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
             final LSSerializer writer = impl.createLSSerializer();
 
-            writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE); // Set this to true if the output needs to be beautified.
-            writer.getDomConfig().setParameter("xml-declaration", keepDeclaration); // Set this to true if the declaration is needed to be outputted.
+            writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+            writer.getDomConfig().setParameter("xml-declaration", keepDeclaration);
 
             return writer.writeToString(document);
         } catch (Exception e) {
