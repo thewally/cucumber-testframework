@@ -5,14 +5,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.soap.*;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
+
 
 /**
  * Created by arjen on 29-11-16.
@@ -45,27 +51,55 @@ public class SoapServiceClient extends ServiceClient {
 
     }
 
-    public SOAPMessage getSoapRequest() throws Exception{
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        Source sourceContent = request.getSOAPPart().getContent();
-        System.out.print("\nRequest SOAP Message = ");
-        StreamResult result = new StreamResult(System.out);
-        transformer.transform(sourceContent, result);
-        return request;
+    public String getSoapRequest() throws Exception{
+        ByteArrayOutputStream baos = null;
+        String result = "";
+        try {
+            baos = new ByteArrayOutputStream();
+            request.writeTo(baos);
+            result = baos.toString();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prettyPrintXml(result);
     }
 
-    public SOAPMessage getSoapResponse() throws Exception{
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        Source sourceContent = response.getSOAPPart().getContent();
-        System.out.print("\nResponse SOAP Message = ");
-        StreamResult result = new StreamResult(System.out);
-        transformer.transform(sourceContent, result);
-        return response;
+    public String getSoapResponse() throws Exception{
+        ByteArrayOutputStream baos = null;
+        String result = "";
+        try {
+            baos = new ByteArrayOutputStream();
+            response.writeTo(baos);
+            result = baos.toString();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prettyPrintXml(result);
     }
 
     public String getValueOfResponseItem(XPath xpath) {
         return "";
+    }
+
+    private String prettyPrintXml(String xml) {
+        try {
+            final InputSource src = new InputSource(new StringReader(xml));
+            final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
+            final Boolean keepDeclaration = Boolean.valueOf(xml.startsWith("<?xml"));
+
+            //May need this: System.setProperty(DOMImplementationRegistry.PROPERTY,"com.sun.org.apache.xerces.internal.dom.DOMImplementationSourceImpl");
+
+
+            final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+            final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+            final LSSerializer writer = impl.createLSSerializer();
+
+            writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE); // Set this to true if the output needs to be beautified.
+            writer.getDomConfig().setParameter("xml-declaration", keepDeclaration); // Set this to true if the declaration is needed to be outputted.
+
+            return writer.writeToString(document);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

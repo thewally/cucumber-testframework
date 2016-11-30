@@ -9,8 +9,3 @@ Feature: As Tester I want to compress and decompress a file
     Given select created compressed file with path dir and filename file.zip
     When decompress file to dir/tmp
     Then decompressed file file.txt is available in directory dir/tmp
-
-  Scenario: service
-    Given nothing
-    When send request
-    Then get response
