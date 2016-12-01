@@ -1,11 +1,11 @@
 package nl.thewally.templates.helpers.servicehelper;
 
 import nl.thewally.templates.helpers.filehelper.CompressedFile;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.soap.*;
-import javax.xml.xpath.XPath;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
@@ -18,7 +18,7 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
-
+import java.util.Iterator;
 
 /**
  * Created by arjen on 29-11-16.
@@ -73,8 +73,37 @@ public class SoapServiceClient extends ServiceClient {
         return prettyPrintXml(result);
     }
 
-    public String getValueOfResponseItem(XPath xpath) {
-        return "";
+    public SOAPElement getChildOfSoapBody(String element) throws SOAPException{
+        SOAPBody soapBody = response.getSOAPBody();
+        Iterator list = soapBody.getChildElements();
+        return iterate(list, element);
+    }
+
+    public SOAPElement getChildOfElement(SOAPElement element, String childElement) {
+        Iterator list = element.getChildElements();
+        return iterate(list, childElement);
+    }
+
+    public String getValueOfElement(SOAPElement element, String childElement) {
+        Iterator list = element.getChildElements();
+        SOAPElement se = iterate(list, childElement);
+        return se.getValue();
+    }
+
+    private SOAPElement iterate(Iterator iterator, String element) {
+        SOAPElement result = null;
+        while(iterator.hasNext()){
+            SOAPElement se = (SOAPElement)iterator.next();
+            if(se.getElementName().getLocalName().equals(element)) {
+                LOG.info(se.getElementName().getLocalName());
+                result = se;
+            }
+        }
+        if(result==null) {
+            LOG.error("Element {} is not available.", element);
+            Assert.fail();
+        }
+        return result;
     }
 
     private String prettyPrintXml(String xml) {

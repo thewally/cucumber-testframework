@@ -6,8 +6,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import nl.thewally.templates.helpers.freemarkerhelper.TemplateHandler;
 import nl.thewally.templates.helpers.servicehelper.SoapServiceClient;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.soap.SOAPElement;
 
 /**
  * Created by arjen on 30-11-16.
@@ -34,5 +37,14 @@ public class StepDefinitionsService {
     @Then("^get response$")
     public void getResponse() throws Throwable {
         LOG.debug("Response: \n{}", client.getSoapResponse());
+        SOAPElement VerifyEmailResponse = client.getChildOfSoapBody("VerifyEmailResponse");
+        SOAPElement VerifyEmailResult = client.getChildOfElement(VerifyEmailResponse, "VerifyEmailResult");
+        String check = client.getValueOfElement(VerifyEmailResult, "ResponseText");
+        if(check.equals("Mail Server will accept email")){
+            Assert.assertTrue("ResponseText is " + check , true);
+        }
+        else {
+            Assert.assertFalse("ResponseText is " + check , true);
+        }
     }
 }
