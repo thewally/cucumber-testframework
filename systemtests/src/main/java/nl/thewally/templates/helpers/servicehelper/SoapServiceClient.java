@@ -95,7 +95,6 @@ public class SoapServiceClient extends ServiceClient {
         while(iterator.hasNext()){
             SOAPElement se = (SOAPElement)iterator.next();
             if(se.getElementName().getLocalName().equals(element)) {
-                LOG.info(se.getElementName().getLocalName());
                 result = se;
             }
         }
