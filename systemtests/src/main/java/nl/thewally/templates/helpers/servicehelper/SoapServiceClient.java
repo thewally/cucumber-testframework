@@ -84,7 +84,7 @@ public class SoapServiceClient extends ServiceClient {
         return iterate(list, childElement);
     }
 
-    public String getValueOfElement(SOAPElement element, String childElement) {
+    public String getValueOfChildElement(SOAPElement element, String childElement) {
         Iterator list = element.getChildElements();
         SOAPElement se = iterate(list, childElement);
         return se.getValue();

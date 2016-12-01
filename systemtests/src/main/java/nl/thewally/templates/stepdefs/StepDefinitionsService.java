@@ -39,7 +39,7 @@ public class StepDefinitionsService {
         LOG.debug("Response: \n{}", client.getSoapResponse());
         SOAPElement VerifyEmailResponse = client.getChildOfSoapBody("VerifyEmailResponse");
         SOAPElement VerifyEmailResult = client.getChildOfElement(VerifyEmailResponse, "VerifyEmailResult");
-        String check = client.getValueOfElement(VerifyEmailResult, "ResponseText");
+        String check = client.getValueOfChildElement(VerifyEmailResult, "ResponseText");
         if(check.equals("Mail Server will accept email")){
             Assert.assertTrue("ResponseText is " + check , true);
         }
