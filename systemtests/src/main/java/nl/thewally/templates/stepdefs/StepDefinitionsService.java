@@ -36,16 +36,19 @@ public class StepDefinitionsService {
             request.setValue(key.toString(), value.toString());
         }
         client = new SoapServiceClient("http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx");
+        client.setRequestHeaders("auth-user", "wala");
         client.sendSoapRequest(request.getOutput());
     }
 
     @Then("^get request$")
     public void getRequest() throws Throwable {
+        LOG.debug("Headers: \n{}", client.getAllRequestHeaders());
         LOG.debug("Request: \n{}", client.getSoapRequest());
     }
 
     @Then("^get response$")
     public void getResponse() throws Throwable {
+        LOG.debug("Headers: \n{}", client.getAllResponseHeaders());
         LOG.debug("Response: \n{}", client.getSoapResponse());
     }
 

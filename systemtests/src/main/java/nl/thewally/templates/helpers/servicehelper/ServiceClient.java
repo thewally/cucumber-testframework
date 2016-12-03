@@ -1,12 +1,9 @@
 package nl.thewally.templates.helpers.servicehelper;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by arjen on 29-11-16.
@@ -15,14 +12,15 @@ public class ServiceClient {
 
     private String endpoint;
     private String request, response;
+    private Map<String, List<String>> requestHeaders = new HashMap<>();
 
 
     public ServiceClient(String endpoint) {
         this.endpoint = endpoint;
     }
 
-    public void setHttpHeader(String name, String value) {
-
+    public void setHttpHeader(String name, String values) {
+        requestHeaders.put(name, Arrays.asList(values));
     }
 
     public void sendPostRequest(String requestMessage) {
@@ -35,6 +33,10 @@ public class ServiceClient {
 
     public String getEndpoint() {
         return endpoint;
+    }
+
+    public void getHttpHeader() {
+
     }
 
     public String getRequest() {

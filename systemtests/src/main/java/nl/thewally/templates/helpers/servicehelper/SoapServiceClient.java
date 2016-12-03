@@ -1,6 +1,5 @@
 package nl.thewally.templates.helpers.servicehelper;
 
-import nl.thewally.templates.helpers.filehelper.CompressedFile;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +25,20 @@ import java.util.Iterator;
 public class SoapServiceClient extends ServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(SoapServiceClient.class);
 
+    private MimeHeaders requestHeaders = new MimeHeaders();
     private SOAPMessage request, response;
 
     public SoapServiceClient(String endpoint) {
         super(endpoint);
     }
 
+    public void setRequestHeaders(String name, String value) {
+        requestHeaders.addHeader(name, value);
+    }
+
     public void sendSoapRequest(String requestMessage) throws Exception {
         MessageFactory factory = MessageFactory.newInstance();
-        request = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(requestMessage.getBytes(Charset.forName("UTF-8"))));
+        request = factory.createMessage(requestHeaders, new ByteArrayInputStream(requestMessage.getBytes(Charset.forName("UTF-8"))));
 
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
@@ -45,6 +49,20 @@ public class SoapServiceClient extends ServiceClient {
             LOG.error("Error occurred while sending SOAP Request to Server: \n{}", e);
         }
 
+    }
+
+    public String getAllRequestHeaders() {
+        String result = "";
+        try {
+            Iterator iterator = request.getMimeHeaders().getAllHeaders();
+            while (iterator.hasNext()) {
+                MimeHeader mimeHeader = (MimeHeader) iterator.next();
+                result += mimeHeader.getName() + " = " + mimeHeader.getValue() + "\n";
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public String getSoapRequest() throws Exception{
@@ -58,6 +76,20 @@ public class SoapServiceClient extends ServiceClient {
             e.printStackTrace();
         }
         return prettyPrintXml(result);
+    }
+
+    public String getAllResponseHeaders() {
+        String result = "";
+        try {
+            Iterator iterator = response.getMimeHeaders().getAllHeaders();
+            while (iterator.hasNext()) {
+                MimeHeader mimeHeader = (MimeHeader) iterator.next();
+                result += mimeHeader.getName() + " = " + mimeHeader.getValue() + "\n";
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public String getSoapResponse() throws Exception{
