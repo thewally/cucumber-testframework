@@ -103,6 +103,17 @@ public class SoapServiceClient extends ServiceClient {
         return result;
     }
 
+    public String getResponseHeader(String name) {
+        String result = "";
+        try {
+            String[] results = response.getMimeHeaders().getHeader(name);
+            result = results[0];
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public String getSoapResponse() throws Exception{
         ByteArrayOutputStream baos = null;
         String result = "";

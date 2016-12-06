@@ -52,8 +52,8 @@ public class StepDefinitionsService {
         LOG.debug("Response: \n{}", client.getSoapResponse());
     }
 
-    @Then("^check headers$")
-    public void checkHeaders() throws Throwable {
+    @Then("^check request headers$")
+    public void checkRequestHeaders() throws Throwable {
         if(client.getRequestHeader("auth-user").equals("wala")) {
             Assert.assertTrue(true);
         }
@@ -61,6 +61,17 @@ public class StepDefinitionsService {
             Assert.assertTrue(false);
         }
         LOG.debug("Header auth-user from request: {}", client.getRequestHeader("auth-user"));
+    }
+
+    @Then("^check response headers$")
+    public void checkResponseHeaders() throws Throwable {
+        if(client.getResponseHeader("Cache-Control").equals("no-cache")) {
+            Assert.assertTrue(true);
+        }
+        else {
+            Assert.assertTrue(false);
+        }
+        LOG.debug("Header Cache-Control from response: {}", client.getRequestHeader("Cache-Control"));
     }
 
     @Then("^check response fields$")

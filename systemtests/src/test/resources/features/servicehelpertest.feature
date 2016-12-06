@@ -5,7 +5,8 @@ Feature: As Tester I want to send a service call and get response
     |email|arjen.vanderwal@gmail.com|
     Then get request
     Then get response
-    Then check headers
+    Then check request headers
+    Then check response headers
     Then check response fields
     |ResponseText   |Mail Server will accept email|
     |ResponseCode   |3                            |
