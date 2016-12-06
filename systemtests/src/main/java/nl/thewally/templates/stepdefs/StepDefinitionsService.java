@@ -52,6 +52,17 @@ public class StepDefinitionsService {
         LOG.debug("Response: \n{}", client.getSoapResponse());
     }
 
+    @Then("^check headers$")
+    public void checkHeaders() throws Throwable {
+        if(client.getRequestHeader("auth-user").equals("wala")) {
+            Assert.assertTrue(true);
+        }
+        else {
+            Assert.assertTrue(false);
+        }
+        LOG.debug("Header auth-user from request: {}", client.getRequestHeader("auth-user"));
+    }
+
     @Then("^check response fields$")
     public void checkResponseFields(Map<String, String> responseItems) throws Throwable {
         Iterator iterator = responseItems.keySet().iterator();
@@ -71,6 +82,7 @@ public class StepDefinitionsService {
             }
         }
     }
+
 
 
 }
