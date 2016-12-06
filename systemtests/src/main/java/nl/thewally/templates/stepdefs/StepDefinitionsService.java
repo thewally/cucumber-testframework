@@ -71,7 +71,7 @@ public class StepDefinitionsService {
         else {
             Assert.assertTrue(false);
         }
-        LOG.debug("Header Cache-Control from response: {}", client.getRequestHeader("Cache-Control"));
+        LOG.debug("Header Cache-Control from response: {}", client.getResponseHeader("Cache-Control"));
     }
 
     @Then("^check response fields$")
