@@ -100,7 +100,7 @@ public class StepDefinitionsService {
     @When("^send get request$")
     public void sendGetRequest() throws Throwable {
         getRequest = new ServiceClient("http://freegeoip.net/json/github.com");
-        getRequest.setHttpHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7");
+        getRequest.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7");
         getRequest.sendGetRequest();
 
     }
