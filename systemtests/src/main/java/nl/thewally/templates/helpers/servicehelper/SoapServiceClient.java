@@ -28,7 +28,7 @@ public class SoapServiceClient extends ServiceClient {
     private MimeHeaders requestHeaders = new MimeHeaders();
     private SOAPMessage request, response;
 
-    public SoapServiceClient(String endpoint) {
+    public SoapServiceClient(String endpoint) throws Exception {
         super(endpoint);
     }
 

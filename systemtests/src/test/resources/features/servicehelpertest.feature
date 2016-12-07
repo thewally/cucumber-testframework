@@ -1,5 +1,5 @@
 Feature: As Tester I want to send a service call and get response
-  Scenario: service
+  Scenario: SOAP service
     Given nothing
     When send request to emailverify service
     |email|arjen.vanderwal@gmail.com|
@@ -12,3 +12,8 @@ Feature: As Tester I want to send a service call and get response
     |ResponseCode   |3                            |
     |LastMailServer |gmail-smtp-in.l.google.com   |
     |GoodEmail      |true                         |
+
+  Scenario: Http Get Request
+    Given nothing
+    When send get request
+    Then get get response
