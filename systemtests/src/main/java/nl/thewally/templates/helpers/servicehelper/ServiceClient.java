@@ -57,7 +57,9 @@ public class ServiceClient {
     }
 
     public void getRequest() throws Exception{
-        LOG.info("\n=====\nRequest message: \n-----\n{}\n{}\n{}\n=====", con.getRequestMethod(), endpoint, requestMessage);
+        LOG.info("Requestmethod: {}",con.getRequestMethod());
+        LOG.info("Endpoint: {}", endpoint);
+        LOG.info("Request message: {}",requestMessage);
     }
 
     public void getResponse() throws Exception {
@@ -75,7 +77,6 @@ public class ServiceClient {
         }
         in.close();
 
-        //print result
-        LOG.info(response.toString());
+        LOG.info("Response: {}",response.toString());
     }
 }
