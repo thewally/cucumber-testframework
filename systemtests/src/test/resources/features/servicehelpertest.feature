@@ -17,3 +17,8 @@ Feature: As Tester I want to send a service call and get response
     Given nothing
     When send get request
     Then get get response
+
+  Scenario: Http Post Request
+    Given nothing
+    When send post request
+    Then get post response

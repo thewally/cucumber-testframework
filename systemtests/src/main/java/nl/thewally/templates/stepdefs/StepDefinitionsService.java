@@ -102,12 +102,26 @@ public class StepDefinitionsService {
         getRequest = new ServiceClient("http://freegeoip.net/json/github.com");
         getRequest.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7");
         getRequest.sendGetRequest();
-
     }
 
     @Then("^get get response$")
     public void getGetResponse() throws Throwable {
-        getRequest.getHttpHeader();
+//        getRequest.getHttpHeader();
+        getRequest.getResponse();
+    }
+
+    @When("^send post request$")
+    public void sendPostRequest() throws Throwable {
+        getRequest = new ServiceClient("http://www.webservicex.net/globalweather.asmx/GetWeather");
+        getRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        getRequest.setRequestHeader("Content-Length", "100");
+        getRequest.sendPostRequest("CityName=Vlieland&CountryName=Netherlands");
+    }
+
+    @Then("^get post response$")
+    public void getPostResponse() throws Throwable {
+//        getRequest.getHttpHeader();
+        getRequest.getRequest();
         getRequest.getResponse();
     }
 }

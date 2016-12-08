@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -17,8 +18,7 @@ import java.util.Map;
  */
 public class ServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceClient.class);
-    private String endpoint;
-    private String request, response;
+    private String endpoint, requestMessage;
     private Map<String, List<String>> requestHeaders = new HashMap<>();
     private URL obj;
     private HttpURLConnection con;
@@ -30,12 +30,14 @@ public class ServiceClient {
         con = (HttpURLConnection) obj.openConnection();
     }
 
-    public void setHttpHeader(String name, String values) {
-        requestHeaders.put(name, Arrays.asList(values));
-    }
-
-    public void sendPostRequest(String requestMessage) {
-
+    public void sendPostRequest(String requestMessage) throws Exception {
+        this.requestMessage = requestMessage;
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(requestMessage);
+        wr.flush();
+        wr.close();
     }
 
     public void setRequestHeader(String name, String value) {
@@ -44,7 +46,6 @@ public class ServiceClient {
 
     public void sendGetRequest() throws Exception {
         con.setRequestMethod("GET");
-        System.out.println("\nSending 'GET' request to URL : " + endpoint);
     }
 
     public String getEndpoint() {
@@ -53,17 +54,16 @@ public class ServiceClient {
 
     public void getHttpHeader() {
         LOG.info(con.getHeaderField("User-Agent"));
-
     }
 
-    public String getRequest() {
-        return request;
+    public void getRequest() throws Exception{
+        LOG.info("\n=====\nRequest message: \n-----\n{}\n{}\n{}\n=====", con.getRequestMethod(), endpoint, requestMessage);
     }
 
     public void getResponse() throws Exception {
         // Get response code and print it
         int responseCode = con.getResponseCode();
-        System.out.println("Response Code : " + responseCode);
+        LOG.info("Response Code: {}", responseCode);
         // Read response message
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
