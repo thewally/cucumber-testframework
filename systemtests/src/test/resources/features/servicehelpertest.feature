@@ -7,6 +7,9 @@ Feature: As Tester I want to send a service call and get response
     Then get response
     Then check request headers
     Then check response headers
+    Then check response by xpath
+    Then node ResponseText contains value Mail Server will accept email
+    Then node VerifyEmailResult contains 4 childs
     Then check response fields
     |ResponseText   |Mail Server will accept email|
     |ResponseCode   |3                            |

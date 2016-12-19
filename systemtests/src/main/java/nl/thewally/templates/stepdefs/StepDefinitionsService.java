@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.soap.SOAPElement;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,6 +97,30 @@ public class StepDefinitionsService {
         }
     }
 
+    @Then("^check response by xpath$")
+    public void checkResponseByXpath() throws Throwable {
+        List x = client.getValueArrayByXpath("//VerifyEmailResult/descendant::*/text()");
+    }
+
+    @Then("^node (.*) contains value (.*)$")
+    public void nodeContainsValue(String node, String value) throws Throwable {
+        if(client.getValueByXpath("//"+node+"/text()").equals(value)){
+            LOG.info("Expected value '{}' returned for node '{}'",value, node);
+            Assert.assertTrue("Expected value '"+value+"' returned for node '"+node+"'", true);
+        } else {
+            Assert.assertTrue("Unexpected value '"+value+"' returned for node '"+node+"'", false);
+        }
+    }
+
+    @Then("^node (.*) contains (\\d+) childs$")
+    public void nodeContainsChilds(String node, int count) throws Throwable {
+        if(client.getCountOfNodesByXpath("count(//"+node+"/descendant::*)")==count) {
+            LOG.info("Expected count '{}' of nodes returned for node '{}'",count, node);
+            Assert.assertTrue("Expected count of nodes returned for node '"+node+"'", true);
+        } else {
+            Assert.assertTrue("Unexpected count of nodes returned for node '"+node+"'", false);
+        }
+    }
 
     @When("^send get request$")
     public void sendGetRequest() throws Throwable {
@@ -124,4 +149,7 @@ public class StepDefinitionsService {
         getRequest.getRequest();
         getRequest.getResponse();
     }
+
+
+
 }
