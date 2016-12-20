@@ -24,9 +24,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by arjen on 29-11-16.
@@ -201,6 +199,23 @@ public class SoapServiceClient extends ServiceClient {
             LOG.info("Added value '{}' to list", nodes.item(i).getNodeValue());
         }
         return returnList;
+    }
+
+    public Map<String, String> getKeyValueMapByXpath(String expression) throws Exception {
+        Map<String, String> returnMap = new HashMap<String, String>();
+
+        if(doc==null) {
+            doc = prepareDocumentForResponse();
+        }
+        expr = prepareXpathExpression(expression);
+
+        Object result = expr.evaluate(doc, XPathConstants.NODESET);
+        NodeList nodes = (NodeList) result;
+        for (int i = 0; i < nodes.getLength(); i++) {
+            returnMap.put(nodes.item(i).getNodeName(), nodes.item(i).getTextContent());
+            LOG.info("Added key value pair '{}/{}' to Map", nodes.item(i).getNodeName(), nodes.item(i).getTextContent());
+        }
+        return returnMap;
     }
 
     public int getCountOfNodesByXpath(String expression) throws Exception {

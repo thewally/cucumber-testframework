@@ -97,13 +97,24 @@ public class StepDefinitionsService {
         }
     }
 
-    @Then("^check response by xpath$")
-    public void checkResponseByXpath() throws Throwable {
-        List x = client.getValueArrayByXpath("//VerifyEmailResult/descendant::*/text()");
+    @Then("^check all child nodes and values for (.*)$")
+    public void checkAllChildNodesAndValuesFor(String node, Map<String, String> expectedItems) throws Throwable {
+        Map<String, String> responseItems = client.getKeyValueMapByXpath("//"+node+"/*");
+        Iterator iterator = expectedItems.keySet().iterator();
+        while(iterator.hasNext()){
+            Object key = iterator.next();
+            if(responseItems.get(key.toString()).equals(expectedItems.get(key))){
+                LOG.info("Element '{}' with value '{}' is available", key.toString(), responseItems.get(key.toString()));
+                Assert.assertTrue("Element '"+ key.toString() +"' with value '"+ responseItems.get(key.toString()) +"' is available." , true);
+            } else {
+                Assert.assertTrue("Element '"+ key.toString() +"' with value '"+ responseItems.get(key.toString()) +"' is not available." , true);
+            }
+        }
+
     }
 
-    @Then("^node (.*) contains value (.*)$")
-    public void nodeContainsValue(String node, String value) throws Throwable {
+    @Then("^check node (.*) contains value (.*)$")
+    public void checkNodeContainsValue(String node, String value) throws Throwable {
         if(client.getValueByXpath("//"+node+"/text()").equals(value)){
             LOG.info("Expected value '{}' returned for node '{}'",value, node);
             Assert.assertTrue("Expected value '"+value+"' returned for node '"+node+"'", true);
@@ -112,8 +123,8 @@ public class StepDefinitionsService {
         }
     }
 
-    @Then("^node (.*) contains (\\d+) childs$")
-    public void nodeContainsChilds(String node, int count) throws Throwable {
+    @Then("^check node (.*) contains (\\d+) childs$")
+    public void checkNodeContainsChilds(String node, int count) throws Throwable {
         if(client.getCountOfNodesByXpath("count(//"+node+"/descendant::*)")==count) {
             LOG.info("Expected count '{}' of nodes returned for node '{}'",count, node);
             Assert.assertTrue("Expected count of nodes returned for node '"+node+"'", true);
